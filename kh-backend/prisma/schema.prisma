@@ -1,0 +1,40 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "mysql"
+    url      = env("DATABASE_URL")
+}
+
+model Employee {
+    id                 String            @id @default(uuid())
+    carNumberPlate     String            @unique
+    doesOwnSpot        Boolean           @default(false)
+    ownedSpot          ParkingSpot?      @relation(fields: [ownedSpotId], references: [id])
+    ownedSpotId        String?           @unique
+    agreementsAsOwner  RentalAgreement[] @relation("owner")
+    agreementsAsRenter RentalAgreement[] @relation("renter")
+}
+
+model ParkingSpot {
+    id              String            @id @default(uuid())
+    readableId      String            @unique
+    owner           Employee?
+    RentalAgreement RentalAgreement[]
+}
+
+model RentalAgreement {
+    id            String      @id @default(uuid())
+    start         DateTime
+    end           DateTime
+    parkingSpot   ParkingSpot @relation(fields: [parkingSpotId], references: [id])
+    parkingSpotId String
+    owner         Employee    @relation("owner", fields: [ownerId], references: [id])
+    ownerId       String
+    renter        Employee    @relation("renter", fields: [renterId], references: [id])
+    renterId      String
+}
