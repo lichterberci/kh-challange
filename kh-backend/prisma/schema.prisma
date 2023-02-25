@@ -33,3 +33,4 @@ model Reservation {
     reservee   Employee? @relation(fields: [reserveeId], references: [id])
     reserveeId String?
 }
+
