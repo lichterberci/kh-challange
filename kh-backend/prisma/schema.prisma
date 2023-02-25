@@ -12,31 +12,24 @@ datasource db {
 }
 
 model Employee {
-    id                 String            @id @default(uuid())
-    oauthId            String            @unique
-    carNumberPlate     String            @unique
-    doesOwnSpot        Boolean           @default(false)
-    ownedSpot          ParkingSpot?      @relation(fields: [ownedSpotId], references: [id])
-    ownedSpotId        String?           @unique
-    agreementsAsOwner  RentalAgreement[] @relation("owner")
-    agreementsAsRenter RentalAgreement[] @relation("renter")
+    id             String        @id @default(uuid())
+    oauthId        String        @unique
+    carNumberPlate String        @unique
+    doesOwnSpot    Boolean       @default(false)
+    ownedSpot      ParkingSpot?  @relation(fields: [ownedSpotId], references: [id])
+    ownedSpotId    String?       @unique
+    reservations   Reservation[]
 }
 
 model ParkingSpot {
-    id              String            @id @default(uuid())
-    readableId      String            @unique
-    owner           Employee?
-    RentalAgreement RentalAgreement[]
+    id         String    @id @default(uuid())
+    readableId String    @unique
+    owner      Employee?
 }
 
-model RentalAgreement {
-    id            String      @id @default(uuid())
-    start         DateTime
-    end           DateTime
-    parkingSpot   ParkingSpot @relation(fields: [parkingSpotId], references: [id])
-    parkingSpotId String
-    owner         Employee    @relation("owner", fields: [ownerId], references: [id])
-    ownerId       String
-    renter        Employee    @relation("renter", fields: [renterId], references: [id])
-    renterId      String
+model Reservation {
+    id         String    @id @default(uuid())
+    date       DateTime
+    reservee   Employee? @relation(fields: [reserveeId], references: [id])
+    reserveeId String?
 }
