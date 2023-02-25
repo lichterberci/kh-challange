@@ -13,7 +13,7 @@ datasource db {
 
 model Employee {
     id                 String            @id @default(uuid())
-    slackId            String            @unique
+    oauthId            String            @unique
     carNumberPlate     String            @unique
     doesOwnSpot        Boolean           @default(false)
     ownedSpot          ParkingSpot?      @relation(fields: [ownedSpotId], references: [id])
