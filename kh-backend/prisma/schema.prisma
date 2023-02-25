@@ -19,12 +19,14 @@ model Employee {
     ownedSpot      ParkingSpot?  @relation(fields: [ownedSpotId], references: [id])
     ownedSpotId    String?       @unique
     reservations   Reservation[]
+    queueSlots     QueueItem[]
 }
 
 model ParkingSpot {
-    id         String    @id @default(uuid())
-    readableId String    @unique
+    id         String      @id @default(uuid())
+    readableId String      @unique
     owner      Employee?
+    queue      QueueItem[]
 }
 
 model Reservation {
@@ -32,4 +34,13 @@ model Reservation {
     date       DateTime
     reservee   Employee? @relation(fields: [reserveeId], references: [id])
     reserveeId String?
+}
+
+model QueueItem {
+    id            String      @id @default(uuid())
+    joinTime      DateTime
+    employee      Employee    @relation(fields: [employeeId], references: [id])
+    employeeId    String
+    parkingSpot   ParkingSpot @relation(fields: [parkingSpotId], references: [id])
+    parkingSpotId String
 }
